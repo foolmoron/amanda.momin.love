@@ -7,17 +7,46 @@
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
     <link href="https://fonts.googleapis.com/css?family=Luckiest+Guy" rel="stylesheet">
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/3.6.3/fabric.min.js"></script>
     <script defer src='main.js'></script>
 </head>
 <body>
     <div class="overlay" id="draw">
         <a class="overlay-close" href="#"></a>
         <div class="overlay-content">
-            <div class="draw-intro">Hello friend, Amanda & Momin here! We hacked this otherwise unremarkable wedding website to give you a simple drawing app, where you can draw something cool for us. We will use these drawings in a secret way during the wedding, so make them fun, awesome, and personal, but not... you know... embarrassing. <br><br>You can edit the drawing anytime you like so don't hold back. And if you run into issues or you lose your drawing or whatever, contact Momin and he can fix it!</div>
+            <div class="draw-intro" onclick="location.href = '#'">Hello friend, Amanda & Momin here! We hacked this otherwise unremarkable wedding website <i>(sorry Zola!)</i>  to give you this little app where you can draw something cool for us.<div style="margin: 0.5rem;"></div>We'll use these drawings in a special way during the wedding, so make them fun, absurd, and personal, but not... you know... unusable.</div>
             <div class="draw-panel">
-                <label for="draw-full-name">IMPORTANT: There's only 1 name and drawing per device (phone, laptop, etc) so make sure this is the one you want to draw on!</label>
-                <input id="draw-full-name" placeholder="Enter Full Name Here"/>
-                <button>Start Drawing!</button>
+                <input class="draw-full-name" name="full-name" placeholder="Enter Full Name Here" required />
+                <div class="colors">
+                    <div data-color="#282828"></div>
+                    <div data-color="#1d2b53"></div>
+                    <div data-color="#7e2553"></div>
+                    <div data-color="#008751"></div>
+                    <div data-color="#ab5236"></div>
+                    <div data-color="#5f574f"></div>
+                    <div data-color="#c2c3c7"></div>
+                    <div data-color="#fff1e8"></div>
+                    <div data-color="#ff004d"></div>
+                    <div data-color="#ffa300"></div>
+                    <div data-color="#ffec27"></div>
+                    <div data-color="#00e436"></div>
+                    <div data-color="#29adff"></div>
+                    <div data-color="#83769c"></div>
+                    <div data-color="#ff77a8"></div>
+                    <div data-color="#ffccaa"></div>
+                </div>
+                <div class="controls">
+                    <div class="border-button tiny width" data-size="12"></div>
+                    <div class="border-button small width" data-size="20"></div>
+                    <div class="border-button medium width" data-size="34"></div>
+                    <div class="border-button large width" data-size="52"></div>
+                    <div class="img-button control undo" style="margin-left: auto;"></div>
+                    <div class="img-button control redo"></div>
+                    <div class="img-button control clear"></div>
+                </div>
+                <canvas id="canvas"></canvas>
+                <button class="submit-button">Submit Drawing!</button>
+                <label class="submit-message">You can submit as many times as you want, so don't hold back. And if you run into issues, contact Momin and he can fix it!</label>
             </div>
         </div>
     </div>
