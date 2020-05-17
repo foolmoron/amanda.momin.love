@@ -207,10 +207,10 @@ body {
     opacity: 1;
     cursor: default;
 }
-.border-button.tiny { border-top-width: 1.45vh; border-bottom-width: 1.45vh; }
-.border-button.small { border-top-width: 1.2vh; border-bottom-width: 1.2vh; }
-.border-button.medium { border-top-width: 0.95vh; border-bottom-width: 0.95vh; }
-.border-button.large { border-top-width: 0.6vh; border-bottom-width: 0.6vh; }
+.border-button.tiny { border-top-width: 1.6vh; border-bottom-width: 1.6vh; }
+.border-button.small { border-top-width: 1.3vh; border-bottom-width: 1.3vh; }
+.border-button.medium { border-top-width: 1.05vh; border-bottom-width: 1.05vh; }
+.border-button.large { border-top-width: 0.65vh; border-bottom-width: 0.65vh; }
 
 .img-button {
     height: 100%;

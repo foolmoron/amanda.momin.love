@@ -1,6 +1,6 @@
 // util
 function debounce(func, time, context) {
-    var timeoutId
+    let timeoutId
     return function() {
         clearTimeout(timeoutId)
         const args = arguments
@@ -48,7 +48,7 @@ function submitFullName(name) {
 }
 
 // main
-var canvas = new fabric.Canvas('canvas', {
+const canvas = new fabric.Canvas('canvas', {
     isDrawingMode: true,
 })
 canvas.wrapperEl.classList.add('wave-border')
@@ -75,7 +75,7 @@ nameInput.addEventListener('input', (e) => localStorage.setItem('DRAW-name', nam
 
 // color controls
 function setColor(colorPicker, colorButtons) {
-    var currentIndex = colorButtons.indexOf(colorPicker)
+    const currentIndex = colorButtons.indexOf(colorPicker)
     localStorage.setItem('DRAW-colorIndex', currentIndex)
     // unset old
     for (let button of colorButtons) {
@@ -83,13 +83,13 @@ function setColor(colorPicker, colorButtons) {
     }
     // set color
     colorPicker.classList.add('selected')
-    var color = colorPicker.dataset.color
+    const color = colorPicker.dataset.color
     canvas.freeDrawingBrush.color = color
     document.querySelector('.draw-panel').style.backgroundColor = color
 }
 
 function setupColors(initialColorIndex) {
-    var colorButtons = Array.from(document.querySelectorAll('.colors > div'))
+    const colorButtons = Array.from(document.querySelectorAll('.colors > div'))
     for (let button of colorButtons) {
         button.style.backgroundColor = button.dataset.color
         button.onclick = function(e) { setColor(button, colorButtons) }
@@ -97,3 +97,17 @@ function setupColors(initialColorIndex) {
     setColor(colorButtons[initialColorIndex || 8], colorButtons)
 }
 setupColors(parseInt(localStorage.getItem('colorIndex')))
+
+// width controls
+const widthButtons = Array.from(document.querySelectorAll('.width'))
+function setWidth(widthButton) {
+    for (let button of widthButtons) {
+        button.classList.remove('selected')
+    }
+    widthButton.classList.add('selected')
+    canvas.freeDrawingBrush.width = parseFloat(widthButton.dataset.size)
+}
+for (let button of widthButtons) {
+    button.onclick = function(e) { setWidth(e.target) }
+}
+setWidth(widthButtons[1])
