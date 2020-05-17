@@ -94,7 +94,7 @@ function setupColors(initialColorIndex) {
     }
     setColor(colorButtons[initialColorIndex || 8], colorButtons)
 }
-setupColors(parseInt(localStorage.getItem('colorIndex')))
+setupColors(parseInt(localStorage.getItem('DRAW-colorIndex')))
 
 // width controls
 const widthButtons = Array.from(document.querySelectorAll('.width'))
