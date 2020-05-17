@@ -68,10 +68,15 @@ doEachAnimationFrame(() => {
     }
 })
 
+// name
+const nameInput = document.querySelector('input[name="full-name"]')
+nameInput.value = localStorage.getItem('DRAW-name') || ''
+nameInput.addEventListener('input', (e) => localStorage.setItem('DRAW-name', nameInput.value.toString()))
+
 // color controls
 function setColor(colorPicker, colorButtons) {
     var currentIndex = colorButtons.indexOf(colorPicker)
-    localStorage.setItem('colorIndex', currentIndex)
+    localStorage.setItem('DRAW-colorIndex', currentIndex)
     // unset old
     for (let button of colorButtons) {
         button.classList.remove('selected')
