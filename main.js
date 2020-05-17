@@ -94,11 +94,12 @@ function setupColors(initialColorIndex) {
     }
     setColor(colorButtons[initialColorIndex || 8], colorButtons)
 }
-setupColors(parseInt(localStorage.getItem('DRAW-colorIndex')))
+setupColors(parseInt(localStorage.getItem('DRAW-colorIndex') || 8))
 
 // width controls
 const widthButtons = Array.from(document.querySelectorAll('.width'))
 function setWidth(widthButton) {
+    localStorage.setItem('DRAW-widthIndex', widthButtons.indexOf(widthButton))
     for (let button of widthButtons) {
         button.classList.remove('selected')
     }
@@ -108,7 +109,7 @@ function setWidth(widthButton) {
 for (let button of widthButtons) {
     button.onclick = function(e) { setWidth(e.target) }
 }
-setWidth(widthButtons[1])
+setWidth(widthButtons[parseInt(localStorage.getItem('DRAW-widthIndex') || 1)])
 
 // drawing history
 let history = []
