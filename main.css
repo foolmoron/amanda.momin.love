@@ -1,8 +1,7 @@
 :root {
     --color-angle: -45deg;
     --callout-color: #f3e9ae;
-    --shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.39);
-    border-radius: 10rem;
+    --disabled-opacity: 0.6;
     --semi-black: #191919;
     --wave-border-x: 15px;
     --wave-border-y: 255px;
@@ -200,7 +199,7 @@ body {
     background-color: var(--semi-black);
     margin: 0 0.2rem;
     cursor: pointer;
-    opacity: 0.6;
+    opacity: var(--disabled-opacity);
     transition: opacity 0.3s;
 }
 .border-button.selected {
@@ -224,7 +223,7 @@ body {
     transition: opacity 0.3s;
 }
 .img-button.disabled {
-    opacity: 0.6;
+    opacity: var(--disabled-opacity);
     cursor: default;
 }
 .img-button.undo {
@@ -263,12 +262,19 @@ body {
     background-color: white;
     transition: 0.5s background-color ease-out;
 }
+.canvas-container.disable-draw {
+    pointer-events: none !important;
+}
 
 .submit-button {
+    height: 2.3rem;
     padding: 0.5rem 1rem;
     color: var(--semi-black);
     background-color: white;
     margin-bottom: 0.6rem;
+}
+.submit-button[disabled] {
+    opacity: var(--disabled-opacity);
 }
 
 .submit-message {

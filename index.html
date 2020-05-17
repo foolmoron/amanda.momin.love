@@ -47,7 +47,10 @@
                 <div class="canvas-resize-helper">
                     <canvas id="canvas"></canvas>
                 </div>
-                <button class="submit-button wave-border">Submit Drawing!</button>
+                <button class="submit-button submit-none wave-border" onclick="submitDrawing()">Submit Drawing!</button>
+                <button class="submit-button submit-inprogress wave-border" style="display: none;">Submitting...</button>
+                <button class="submit-button submit-failed wave-border" onclick="submitDrawing()" style="display: none;">⚠ Submit Failed, Try Again ⚠</button>
+                <button class="submit-button submit-done wave-border" disabled style="display: none;">Successfully Submitted Drawing ✅</button>
                 <label class="submit-message">You can submit as many times as you want, don't worry!</label>
                 <label class="submit-message">(If you run into issues, contact Momin and he can fix it)</label>
             </div>
