@@ -14,9 +14,9 @@
     <div class="overlay" id="draw">
         <a class="overlay-close" href="#"></a>
         <div class="overlay-content">
-            <div class="draw-intro wave-border" onclick="location.href = '#'">Hello friend, Amanda & Momin here! We hacked this otherwise unremarkable wedding website <i>(sorry Zola!)</i>  to give you this little app where you can draw something cool for us.<div style="margin: 0.5rem;"></div>We'll use these drawings in a special way during the wedding, so make them fun, absurd, and personal, but not... you know... unusable.</div>
+            <div class="draw-intro wave-border" onclick="location.href = '#'">Hello friend! We hacked this otherwise unremarkable wedding website <i>(sorry Zola!)</i>  to give you this little app where you can draw something cool for us.<div style="margin: 0.4rem;"></div>We'll use these drawings in a special way during the wedding, so make them fun, absurd, and personal, but not... you know... inappropriate.<div style="margin: 0.3rem;"></div>♥ Amanda & Momin ♥</div>
             <div class="draw-panel wave-border">
-                <input class="draw-full-name" name="full-name" placeholder="Enter Full Name Here" required />
+                <input class="draw-full-name wave-border" name="full-name" placeholder="Enter Full Name Here" required />
                 <div class="colors">
                     <div class="wave-border" data-color="#282828" style="--wave-border-x: 19px; --wave-border-y: 75px;"></div>
                     <div class="wave-border" data-color="#1d2b53" style="--wave-border-x: 23px; --wave-border-y: 6px;"></div>
@@ -36,17 +36,20 @@
                     <div class="wave-border" data-color="#ffccaa" style="--wave-border-x: 37px; --wave-border-y: 158px;"></div>
                 </div>
                 <div class="controls">
-                    <div class="border-button tiny width" data-size="12"></div>
-                    <div class="border-button small width" data-size="20"></div>
-                    <div class="border-button medium width" data-size="34"></div>
-                    <div class="border-button large width" data-size="52"></div>
-                    <div class="img-button control undo" style="margin-left: auto;"></div>
-                    <div class="img-button control redo"></div>
-                    <div class="img-button control clear"></div>
+                    <div class="border-button wave-border tiny width" data-size="12" style="--wave-border-x: 380px; --wave-border-y: 35px;"></div>
+                    <div class="border-button wave-border small width" data-size="20" style="--wave-border-x: 10px; --wave-border-y: 85px;"></div>
+                    <div class="border-button wave-border medium width" data-size="34" style="--wave-border-x: 17px; --wave-border-y: 70px;"></div>
+                    <div class="border-button wave-border large width" data-size="52" style="--wave-border-x: 13px; --wave-border-y: 81px;"></div>
+                    <div class="img-button wave-border control undo" style="margin-left: auto; --wave-border-x: 533px; --wave-border-y: 51px;"></div>
+                    <div class="img-button wave-border control redo" style="--wave-border-x: 13px; --wave-border-y: 81px;"></div>
+                    <div class="img-button wave-border control clear" style="--wave-border-x: 11px; --wave-border-y: 6px;"></div>
                 </div>
-                <canvas id="canvas"></canvas>
-                <button class="submit-button">Submit Drawing!</button>
-                <label class="submit-message">You can submit as many times as you want, so don't hold back. And if you run into issues, contact Momin and he can fix it!</label>
+                <div class="canvas-resize-helper">
+                    <canvas id="canvas"></canvas>
+                </div>
+                <button class="submit-button wave-border">Submit Drawing!</button>
+                <label class="submit-message">You can submit as many times as you want, don't worry!</label>
+                <label class="submit-message">(If you run into issues, contact Momin and he can fix it)</label>
             </div>
         </div>
     </div>

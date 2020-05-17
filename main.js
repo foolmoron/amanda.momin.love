@@ -1,4 +1,19 @@
 // util
+function debounce(func, time, context) {
+    var timeoutId
+    return function() {
+        clearTimeout(timeoutId)
+        const args = arguments
+        timeoutId = setTimeout(function() { func.apply(context, args) }, time)
+    }
+}
+function doEachAnimationFrame(func, context) {
+    const wrappedFunc = () => {
+        func.call(context)
+        requestAnimationFrame(wrappedFunc)
+    }
+    requestAnimationFrame(wrappedFunc)
+}
 function lerp(a, b, t) {
     return a + t * (b - a)
 }
@@ -35,6 +50,22 @@ function submitFullName(name) {
 // main
 var canvas = new fabric.Canvas('canvas', {
     isDrawingMode: true,
+})
+canvas.wrapperEl.classList.add('wave-border')
+canvas.wrapperEl.style.setProperty('--wave-border-x', 3 + 'px')
+canvas.wrapperEl.style.setProperty('--wave-border-y', 104 + 'px')
+
+// resizing
+let prevCanvasWidth = 0
+let prevCanvasHeight = 0
+doEachAnimationFrame(() => {
+    if (canvas.wrapperEl.clientWidth != prevCanvasWidth || canvas.wrapperEl.clientHeight != prevCanvasHeight) {
+        canvas.setWidth(canvas.wrapperEl.clientWidth)
+        canvas.setHeight(canvas.wrapperEl.clientHeight)
+        canvas.renderAll()
+        prevCanvasWidth = canvas.wrapperEl.clientWidth
+        prevCanvasHeight = canvas.wrapperEl.clientHeight
+    }
 })
 
 // color controls
