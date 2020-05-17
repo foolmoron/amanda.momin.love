@@ -109,7 +109,7 @@ body {
 .overlay-content {
     display: grid;
     grid-template-columns: 100%;
-    grid-template-rows: 21% 1fr;
+    grid-template-rows: 20% 1fr;
     grid-template-areas:
         "intro"
         "panel"
@@ -133,8 +133,9 @@ body {
 }
 
 .draw-intro {
+    position: relative;
     grid-area: intro;
-    margin: 0.7rem 1.2rem;
+    margin: 0.5rem 1.2rem;
     padding: 0.3rem;
     background: var(--callout-color);
     white-space: pre-wrap;
@@ -143,8 +144,8 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 0px 4px;
-    margin-bottom: 2px;
+    margin: 0 0.2rem;
+    margin-bottom: 0.4rem;
     grid-area: panel;
     padding: 0.6rem;
     white-space: pre-wrap;
@@ -199,16 +200,17 @@ body {
     background-color: var(--semi-black);
     margin: 0 0.2rem;
     cursor: pointer;
+    opacity: 0.6;
     transition: opacity 0.3s;
 }
 .border-button.selected {
-    background-color: transparent;
+    opacity: 1;
     cursor: default;
 }
-.border-button.tiny { border-top-width: 1.4vh; border-bottom-width: 1.4vh; }
+.border-button.tiny { border-top-width: 1.45vh; border-bottom-width: 1.45vh; }
 .border-button.small { border-top-width: 1.2vh; border-bottom-width: 1.2vh; }
 .border-button.medium { border-top-width: 0.95vh; border-bottom-width: 0.95vh; }
-.border-button.large { border-top-width: 0.7vh; border-bottom-width: 0.7vh; }
+.border-button.large { border-top-width: 0.6vh; border-bottom-width: 0.6vh; }
 
 .img-button {
     height: 100%;
@@ -222,7 +224,7 @@ body {
     transition: opacity 0.3s;
 }
 .img-button.disabled {
-    opacity: 0.7;
+    opacity: 0.6;
     cursor: default;
 }
 .img-button.undo {
