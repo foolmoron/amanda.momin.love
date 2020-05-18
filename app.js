@@ -53,7 +53,7 @@ app.get('/drawing/:id', async (req, res, next) => {
 
 var canvas = new fabric.StaticCanvas(null, { width: 11, height: 13 }) // 1 canvas for whole app
 app.post('/drawing', async (req, res, next) => {
-    const name = sanitizeFilename(req.body.name || '___')
+    const name = sanitizeFilename(req.body.name || '___').replace(/\s/g, '_')
     const drawing = req.body.json
     const dimensions = req.body.dimensions
     try {
