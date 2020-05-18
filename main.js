@@ -190,6 +190,8 @@ clearButton.onclick = function(e) {
             canvasContainer.style.transition = prevTransition
             canvasContainer.style.backgroundColor = prevColor
         }, 0)
+    } else {
+        DEBUG_triggerLoadFromServer()
     }
 }
 
@@ -239,7 +241,7 @@ function submitDrawing() {
         })
     }).then(res => {
         if (res.ok) {
-        submitState = SUBMIT_STATE.DONE
+            submitState = SUBMIT_STATE.DONE
         } else {
             throw res.statusText
         }
@@ -261,3 +263,30 @@ doEachAnimationFrame(() => {
     submitButtons[submitState].style.display = null
     canvas.wrapperEl.classList.toggle('disable-draw', submitState === SUBMIT_STATE.INPROGRESS)
 })
+
+// utility to replace current drawing with JSON from server
+let DEBUG_loadFromServerCounter = 0
+const DEBUG_resetLoadFromServerCounter = debounce(() => {
+    DEBUG_loadFromServerCounter = 0
+}, 600)
+function DEBUG_triggerLoadFromServer() {
+    DEBUG_loadFromServerCounter++
+    if (DEBUG_loadFromServerCounter > 5) {
+        DEBUG_loadFromServer(prompt('Paste the text that you were given to load your drawing:', ''))
+        DEBUG_loadFromServerCounter = 0
+    }
+    DEBUG_resetLoadFromServerCounter()
+}
+function DEBUG_loadFromServer(id) {
+    if (!id || !id.toString()) {
+        return
+    }
+    fetch(DRAWING_POST_URL + '/' + id)
+        .then(res => res.json())
+        .then(json => {
+            clearButton.dispatchEvent(new Event('click'))
+            canvas.loadFromJSON(json, function() {
+                canvas.renderAll()
+            })
+        })
+}
