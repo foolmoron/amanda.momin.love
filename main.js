@@ -22,7 +22,7 @@ function ilerp(x, a, b) {
 }
 
 // config
-const DRAWING_POST_URL = 'http://localhost:8000'
+const DRAWING_POST_URL = 'http://localhost:8000/drawing'
 
 // callout banner color anim
 function doLetters(letters) {
@@ -229,13 +229,20 @@ function submitDrawing() {
     // post data and dimensions
     fetch(DRAWING_POST_URL, {
         method: 'post',
+        headers: {
+            'Content-type': 'application/json',
+        },
         body: JSON.stringify({
             name: nameInput.value || '',
             json: data,
             dimensions: { width: Math.ceil(bounds.width), height: Math.ceil(bounds.height) },
         })
     }).then(res => {
+        if (res.ok) {
         submitState = SUBMIT_STATE.DONE
+        } else {
+            throw res.statusText
+        }
     }).catch(err => {
         submitState = SUBMIT_STATE.FAILED
     })
