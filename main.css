@@ -83,7 +83,6 @@ body {
     width: 100vw;
     height: 100vh;
     display: flex;
-    align-items: center;
     justify-content: center;
     opacity: 0;
     background: rgba(0, 0, 0, 0.25);
@@ -108,15 +107,14 @@ body {
 .overlay-content {
     display: grid;
     grid-template-columns: 100%;
-    grid-template-rows: 20% 1fr;
+    grid-template-rows: 21% 1fr;
     grid-template-areas:
         "intro"
         "panel"
         ;
 
     width: 100%;
-    height: 92%;
-    height: -webkit-fill-available;
+    height: 93%;
     z-index: 10;
 
     font-family: 'Luckiest Guy';
@@ -127,14 +125,16 @@ body {
 }
 @media (min-width: 600px) {
     .overlay-content {
-        width: 50vh;
+        align-self: center;
+        width: 56vh;
+        --font-size: calc(1.6vh);
     }
 }
 
 .draw-intro {
     position: relative;
     grid-area: intro;
-    margin: 0.5rem 1.2rem;
+    margin: 0.5rem 1.2rem 0.7vh;
     padding: 0.3rem;
     background: var(--callout-color);
     white-space: pre-wrap;
@@ -156,13 +156,13 @@ body {
 }
 
 .draw-full-name {
-    padding: 0.5rem 0.8rem 0.3rem;
+    padding: 0.2rem 0.8rem 0rem;
     width: 80%;
     margin-bottom: 0.6rem;
     text-align: center;
     color: var(--semi-black);
     font-family: 'Luckiest Guy';
-    font-size: 1.2rem;
+    font-size: 160%;
     letter-spacing: 1px;
     -webkit-text-stroke: 0;
 }
@@ -189,6 +189,7 @@ body {
     align-self: stretch;
     margin-bottom: 0.6rem;
     height: 5%;
+    align-items: baseline;
 }
 .border-button {
     height: 100%;
@@ -206,7 +207,7 @@ body {
     opacity: 1;
     cursor: default;
 }
-.border-button.tiny { border-top-width: 1.6vh; border-bottom-width: 1.6vh; }
+.border-button.tiny { border-top-width: 1.55vh; border-bottom-width: 1.55vh; }
 .border-button.small { border-top-width: 1.3vh; border-bottom-width: 1.3vh; }
 .border-button.medium { border-top-width: 1.05vh; border-bottom-width: 1.05vh; }
 .border-button.large { border-top-width: 0.65vh; border-bottom-width: 0.65vh; }
@@ -239,11 +240,10 @@ body {
 
 @media (min-width : 600px) {
     .border-button {
-        width: 6.3vh;
+        width: 5.3vh;
     }
     .img-button {
-        width: 6.3vh;
-        margin-top: 0.4vh;
+        width: 5.3vh;
     }
 }
 
