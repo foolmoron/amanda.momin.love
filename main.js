@@ -25,7 +25,10 @@ function ilerp(x, a, b) {
 const DRAWING_POST_URL = 'http://localhost:8000/drawing'
 
 // callout banner color anim
-function doLetters(letters) {
+function doBannerAnim(title, letters) {
+    title.borderToggle = !title.borderToggle
+    title.style.setProperty('--wave-border-x', (title.borderToggle ? 29 : 30) + 'px')
+    title.style.setProperty('--wave-border-y', (title.borderToggle ? 4 : 355) + 'px')
     letters.forEach(letter => {
         letter.style.transform = `translateX(${lerp(-1.5, 1.5, Math.random())}%) translateY(${lerp(-2.5, 2.5, Math.random())}%) rotate(${lerp(-9, 9, Math.random())}deg)`
         letter.style.setProperty('--color-angle', `${lerp(0, 360, Math.random())}deg`)
@@ -33,11 +36,12 @@ function doLetters(letters) {
     })
 }
 document.querySelectorAll('.callout').forEach(callout => {
+    const title = callout.querySelector('.title')
     const letters = callout.querySelectorAll('.title span')
     let intervalId = 0
     callout.addEventListener('mouseenter', e => {
-        intervalId = setInterval(() => doLetters(letters), 450)
-        doLetters(letters)
+        intervalId = setInterval(() => doBannerAnim(title, letters), 450)
+        doBannerAnim(title, letters)
     })
     callout.addEventListener('mouseleave', e => {
         clearInterval(intervalId)

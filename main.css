@@ -55,13 +55,13 @@ body {
 }
 
 .callout {
-    padding: 0.8vh 1rem;
-    background: var(--callout-color);
+    padding: 0.3vh 0.5rem;
     box-shadow: inset 0 -2px 4px 0 rgba(0, 0, 0, 0.1);
     text-align: center;
     text-decoration: none;
 }
 .callout .title {
+    background-color: var(--callout-color);
     font-size: 4vw;
     letter-spacing: -0.2vw;
     -webkit-text-stroke: 0.12vh black;
