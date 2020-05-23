@@ -36,7 +36,7 @@ body {
         yellow 28.57%, yellow 42.86%,
         #00e20b 42.86%, #00e20b 57.14%,
         cyan 57.14%, cyan 71.42%,
-        #0037ff 71.42%, #0037ff 85.71%,
+        #0059ff 71.42%, #0059ff 85.71%,
         violet 85.71%
     );
     background-size: 9% 43%;
@@ -64,7 +64,7 @@ body {
 .callout .title {
     font-size: 4vw;
     letter-spacing: -0.2vw;
-    -webkit-text-stroke: 0.18vw black;
+    -webkit-text-stroke: 0.12vh black;
 }
 @media (min-width: 1200px) {
     .callout .title {
@@ -138,6 +138,22 @@ body {
     padding: 0.3rem;
     background: var(--callout-color);
     white-space: pre-wrap;
+}
+.draw-x {
+    position: absolute;
+    background: var(--callout-color);
+    right: -1%;
+    top: -6%;
+    width: 1.3vh;
+    height: 1.5vh;
+    padding-left: 0.3vh;
+    padding-top: 0.1vh;
+    padding-bottom: 0.1vh;
+    font-size: 1.5vh;
+    line-height: 1.8vh;
+    user-select: none;
+    --wave-border-x: 4px;
+    --wave-border-y: 12px;
 }
 .draw-panel {
     display: flex;
