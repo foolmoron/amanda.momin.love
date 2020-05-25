@@ -65,10 +65,10 @@ body {
 }
 .callout .title {
     background-color: var(--callout-color);
-    padding: 0 1.1rem;
-    font-size: 4vw;
+    padding: 0.1rem 0.3rem 0;
+    font-size: 5.4vw;
     letter-spacing: -0.2vw;
-    -webkit-text-stroke: 0.12vh black;
+    -webkit-text-stroke: 0.2vh black;
 }
 @media (min-width: 1200px) {
     .callout .title {
@@ -90,7 +90,7 @@ body {
     justify-content: center;
     opacity: 0;
     background: rgba(0, 0, 0, 0.25);
-    transition: 0.4s opacity;
+    transition: 0.25s opacity;
     pointer-events: none;
 }
 .overlay:target {
@@ -118,7 +118,7 @@ body {
         ;
 
     width: 100%;
-    height: 93%;
+    height: 88%;
     z-index: 10;
 
     font-family: 'Luckiest Guy';
@@ -131,6 +131,7 @@ body {
     .overlay-content {
         align-self: center;
         width: 56vh;
+        height: 96%;
         --font-size: calc(1.6vh);
     }
 }
@@ -140,7 +141,10 @@ body {
     grid-area: intro;
     margin: 0.5rem 1.2rem 0.7vh;
     padding: 0.3rem;
+    padding-top: 0.4rem;
     background: var(--callout-color);
+    color: var(--semi-black);
+    -webkit-text-stroke: 0;
     white-space: pre-wrap;
 }
 .draw-x {
@@ -188,10 +192,9 @@ body {
 }
 
 .colors {
-    display: grid;
-    margin-bottom: 0.6rem;
-    grid-template-columns: repeat(8, 1fr);
-    grid-template-rows: repeat(2, 1fr);
+    display: flex; /* need to do a wrapped flex due to weird grid behavior on ios */
+    flex-wrap: wrap;
+    margin-bottom: 0.2rem;
     width: 100%;
     height: 12%;
     gap: 2px;
@@ -199,6 +202,9 @@ body {
 .colors div {
     border: 2px solid black;
     cursor: pointer;
+    box-sizing: border-box;
+    width: calc(12.5% - 2px);
+    margin: 1px;
 }
 .colors div.selected {
     border-style: dashed;
@@ -217,7 +223,7 @@ body {
     box-sizing: border-box;
     border: 1vh solid white;
     box-shadow: 0 0 0 2px black;
-    background-color: var(--semi-black);
+    background-color: black;
     margin: 0 0.2rem;
     cursor: pointer;
     opacity: var(--disabled-opacity);
@@ -239,7 +245,7 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: 50%;
-    background-color: var(--semi-black);
+    background-color: black;
     cursor: pointer;
     transition: opacity 0.3s;
 }
