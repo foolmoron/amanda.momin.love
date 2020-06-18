@@ -263,8 +263,11 @@ const submitButtons = {
 }
 const submitButtonsAll = Object.values(submitButtons)
 doEachAnimationFrame(() => {
-    submitButtonsAll.forEach(b => b.style.display = 'none')
-    submitButtons[submitState].style.display = null
+    const activeButton = submitButtons[submitState]
+    activeButton.style.display = null
+    submitButtonsAll
+        .filter(b => b !== activeButton)
+        .forEach(b => b.style.display = 'none')
     canvas.wrapperEl.classList.toggle('disable-draw', submitState === SUBMIT_STATE.INPROGRESS)
 })
 
