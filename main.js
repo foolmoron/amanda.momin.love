@@ -22,7 +22,7 @@ function ilerp(x, a, b) {
 }
 
 // config
-const DRAWING_POST_URL = 'http://localhost:8000/drawing'
+const DRAWING_POST_URL = 'https://loves.fool.games/drawing'
 
 // callout banner color anim
 function doBannerAnim(title, letters) {
