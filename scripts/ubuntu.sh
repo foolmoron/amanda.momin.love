@@ -15,7 +15,7 @@ git clone -b server https://github.com/foolmoron/amanda.momin.love.git
 cd amanda.momin.love/
 npm install
 mkdir certs
-sudo certbot certonly --standalone -w certs -d loves.fool.games
+sudo certbot certonly --manual --preferred-challenges dns -w certs -d loves.fool.games
 
 echo "1. Change ports to 80/443"
 echo "2. Change config.js secret/pass/host"
