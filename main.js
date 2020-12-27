@@ -116,31 +116,12 @@ for (let button of widthButtons) {
 setWidth(widthButtons[parseInt(localStorage.getItem('DRAW-widthIndex') || 1)])
 
 // drawing history
-let history = []
-let historyIndex = 0
-let doingHistory = false
+const historyStack = []
 let justCleared = false
-function redrawUpToHistory(index) {
-    justCleared = false
-    canvas.clear()
-    doingHistory = true
-    for (let i = 0; i < index && i < history.length; i++) {
-        canvas.add(history[i])
-    }
-    doingHistory = false
-    canvas.renderAll()
-}
 
 // handle when new path is drawn
 canvas.on('object:added', function(e) {
-    if (doingHistory) return
-
     justCleared = false
-    if (historyIndex < history.length) {
-        history = history.slice(0, historyIndex)
-    }
-    history.push(e.target)
-    historyIndex++
 
     // reset submitted state
     submitState = SUBMIT_STATE.NONE
@@ -163,26 +144,31 @@ const clearButton = document.querySelector('.clear')
 
 undoButton.onclick = function(e) {
     if (justCleared) {
-        historyIndex = history.length
-        redrawUpToHistory(historyIndex, true)
-    } else if (historyIndex > 0) {
-        historyIndex = Math.max(historyIndex - 1, 0)
-        redrawUpToHistory(historyIndex, true)
+        while (historyStack.length) {
+            canvas.add(historyStack.pop())
+        }
+    } else if (canvas._objects.length) {
+        const latestItem = canvas._objects[canvas._objects.length - 1]
+        historyStack.push(latestItem)
+        canvas.remove(latestItem)
     }
 }
 redoButton.onclick = function(e) {
     if (justCleared) {
-        historyIndex = history.length
-        redrawUpToHistory(historyIndex, true)
-    } else if (historyIndex < history.length) {
-        historyIndex = Math.min(historyIndex + 1, history.length)
-        redrawUpToHistory(historyIndex, true)
+        while (historyStack.length) {
+            canvas.add(historyStack.pop())
+        }
+    } else if (historyStack.length) {
+        canvas.add(historyStack.pop())
     }
 }
 clearButton.onclick = function(e) {
-    if (historyIndex > 0) {
-        historyIndex = 0
-        redrawUpToHistory(historyIndex, true)
+    if (canvas._objects.length) {
+        while (canvas._objects.length) {
+            const latestItem = canvas._objects[canvas._objects.length - 1]
+            historyStack.push(latestItem)
+            canvas.remove(latestItem)
+        }
         justCleared = true
         // flash canvas red
         const canvasContainer = document.querySelector('.canvas-container')
@@ -200,8 +186,8 @@ clearButton.onclick = function(e) {
 }
 
 doEachAnimationFrame(() => {
-    undoButton.classList.toggle('disabled', !justCleared && historyIndex <= 0 && canvas.isDrawingMode)
-    redoButton.classList.toggle('disabled', !justCleared && historyIndex >= history.length && canvas.isDrawingMode)
+    undoButton.classList.toggle('disabled', !justCleared && canvas._objects.length == 0 && canvas.isDrawingMode)
+    redoButton.classList.toggle('disabled', !justCleared && !historyStack.length && canvas.isDrawingMode)
     clearButton.classList.toggle('disabled', canvas._objects.length == 0 && canvas.isDrawingMode)
 })
 
@@ -293,6 +279,7 @@ function DEBUG_loadFromServer(id) {
         .then(json => {
             clearButton.dispatchEvent(new Event('click'))
             canvas.loadFromJSON(json, function() {
+                historyStack.splice(0, historyStack.length)
                 canvas.renderAll()
             })
         })
