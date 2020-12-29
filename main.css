@@ -285,10 +285,15 @@ body {
     width: 100% !important;
     height: 100% !important;
     top: 0 !important;
-    background-color: white;
+    left: 0 !important;
+    background-color: transparent;
     transition: 0.5s background-color ease-out;
 }
 .canvas-container.disable-draw {
+    pointer-events: none !important;
+}
+#static-canvas {
+    background-color: white;
     pointer-events: none !important;
 }
 

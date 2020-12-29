@@ -57,6 +57,23 @@ canvas.wrapperEl.classList.add('wave-border')
 canvas.wrapperEl.style.setProperty('--wave-border-x', 3 + 'px')
 canvas.wrapperEl.style.setProperty('--wave-border-y', 104 + 'px')
 
+const staticCanvas = new fabric.StaticCanvas('static-canvas')
+staticCanvas.lowerCanvasEl.classList.add('wave-border')
+staticCanvas.lowerCanvasEl.style.setProperty('--wave-border-x', 3 + 'px')
+staticCanvas.lowerCanvasEl.style.setProperty('--wave-border-y', 104 + 'px')
+
+function loadFromJSON(json) {
+    staticCanvas.renderOnAddRemove = false
+    fabric.util.enlivenObjects(json.objects, (objs) => {
+        objs.forEach((item) => {
+            staticCanvas.add(item)
+        });
+        staticCanvas.renderAll()
+        staticCanvas.renderOnAddRemove = true
+        historyStack.splice(0, historyStack.length)
+    });
+}
+
 // resizing
 let prevCanvasWidth = 0
 let prevCanvasHeight = 0
@@ -65,6 +82,9 @@ doEachAnimationFrame(() => {
         canvas.setWidth(canvas.wrapperEl.clientWidth)
         canvas.setHeight(canvas.wrapperEl.clientHeight)
         canvas.renderAll()
+        staticCanvas.setWidth(canvas.wrapperEl.clientWidth)
+        staticCanvas.setHeight(canvas.wrapperEl.clientHeight)
+        staticCanvas.renderAll()
         prevCanvasWidth = canvas.wrapperEl.clientWidth
         prevCanvasHeight = canvas.wrapperEl.clientHeight
     }
@@ -121,20 +141,26 @@ let justCleared = false
 
 // handle when new path is drawn
 canvas.on('object:added', function(e) {
+    historyStack.splice(0, historyStack.length)
     justCleared = false
 
     // reset submitted state
     submitState = SUBMIT_STATE.NONE
 
+    // add only to static
+    canvas.remove(e.target)
+    staticCanvas.add(e.target)
+
     // save drawing
-    localStorage.setItem('DRAW-drawing', JSON.stringify(canvas.toObject()))
+    localforage.setItem('DRAW-drawing', JSON.stringify(staticCanvas.toObject()))
 })
 
 // load drawing after page load
 document.addEventListener('DOMContentLoaded', e => {
-    canvas.loadFromJSON(JSON.parse(localStorage.getItem('DRAW-drawing')), function() {
-        canvas.renderAll()
-    })
+    localforage.getItem('DRAW-drawing', function(e, value) {
+        value = value || localStorage.getItem('DRAW-drawing')
+        loadFromJSON(JSON.parse(value))
+    });
 })
 
 // drawing controls
@@ -145,29 +171,29 @@ const clearButton = document.querySelector('.clear')
 undoButton.onclick = function(e) {
     if (justCleared) {
         while (historyStack.length) {
-            canvas.add(historyStack.pop())
+            staticCanvas.add(historyStack.pop())
         }
-    } else if (canvas._objects.length) {
-        const latestItem = canvas._objects[canvas._objects.length - 1]
+    } else if (staticCanvas._objects.length) {
+        const latestItem = staticCanvas._objects[staticCanvas._objects.length - 1]
         historyStack.push(latestItem)
-        canvas.remove(latestItem)
+        staticCanvas.remove(latestItem)
     }
 }
 redoButton.onclick = function(e) {
     if (justCleared) {
         while (historyStack.length) {
-            canvas.add(historyStack.pop())
+            staticCanvas.add(historyStack.pop())
         }
     } else if (historyStack.length) {
-        canvas.add(historyStack.pop())
+        staticCanvas.add(historyStack.pop())
     }
 }
 clearButton.onclick = function(e) {
-    if (canvas._objects.length) {
-        while (canvas._objects.length) {
-            const latestItem = canvas._objects[canvas._objects.length - 1]
+    if (staticCanvas._objects.length) {
+        while (staticCanvas._objects.length) {
+            const latestItem = staticCanvas._objects[staticCanvas._objects.length - 1]
             historyStack.push(latestItem)
-            canvas.remove(latestItem)
+            staticCanvas.remove(latestItem)
         }
         justCleared = true
         // flash canvas red
@@ -186,9 +212,9 @@ clearButton.onclick = function(e) {
 }
 
 doEachAnimationFrame(() => {
-    undoButton.classList.toggle('disabled', !justCleared && canvas._objects.length == 0 && canvas.isDrawingMode)
+    undoButton.classList.toggle('disabled', !justCleared && staticCanvas._objects.length == 0 && canvas.isDrawingMode)
     redoButton.classList.toggle('disabled', !justCleared && !historyStack.length && canvas.isDrawingMode)
-    clearButton.classList.toggle('disabled', canvas._objects.length == 0 && canvas.isDrawingMode)
+    clearButton.classList.toggle('disabled', staticCanvas._objects.length == 0 && canvas.isDrawingMode)
 })
 
 // drawing submit
@@ -265,7 +291,7 @@ const DEBUG_resetLoadFromServerCounter = debounce(() => {
 function DEBUG_triggerLoadFromServer() {
     DEBUG_loadFromServerCounter++
     if (DEBUG_loadFromServerCounter > 5) {
-        DEBUG_loadFromServer(prompt('Paste the text that you were given to load your drawing:', ''))
+        DEBUG_loadFromServer(prompt('Paste the code that you were given to load your drawing', ''))
         DEBUG_loadFromServerCounter = 0
     }
     DEBUG_resetLoadFromServerCounter()
@@ -278,9 +304,6 @@ function DEBUG_loadFromServer(id) {
         .then(res => res.json())
         .then(json => {
             clearButton.dispatchEvent(new Event('click'))
-            canvas.loadFromJSON(json, function() {
-                historyStack.splice(0, historyStack.length)
-                canvas.renderAll()
-            })
+            loadFromJSON(json)
         })
 }
