@@ -228,7 +228,7 @@ let submitState = SUBMIT_STATE.NONE
 function submitDrawing() {
     submitState = SUBMIT_STATE.INPROGRESS
     // calculate and cache bounds
-    const group = new fabric.Group(canvas.getObjects(), null, true)
+    const group = new fabric.Group(staticCanvas.getObjects(), null, true)
     group._calcBounds()
     const bounds = {
         left: group.left,
@@ -239,7 +239,7 @@ function submitDrawing() {
     // reset objects to center
     group.setPositionByOrigin({x: 0, y: 0})
     // get data and shift objects to top-left based on bounds
-    const data = canvas.toObject()
+    const data = staticCanvas.toObject()
     data.objects.forEach(function(obj) {
         obj.left = obj.left - bounds.left
         obj.top = obj.top - bounds.top
