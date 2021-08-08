@@ -30,7 +30,63 @@ window.addEventListener('unhandledrejection', function(e) {
 });
 
 // config
-const DRAWING_POST_URL = 'https://loves.fool.games/drawing'
+const BASE_URL = 'https://loves.fool.games/drawing'
+
+// api calls
+const POST = {
+    method: 'post',
+    headers: {
+        'Content-type': 'application/json',
+    },
+}
+function reportDrawing(canvasObject) {
+    fetch(BASE_URL + '/inprogress/drawing', {
+        method: 'post',
+        headers: {
+            'Content-type': 'application/json',
+        },
+        body: JSON.stringify({
+            id: 0,
+            drawing: staticCanvas.toObject(),
+        })
+    })
+}
+function reportAdd(canvasObject) {
+    fetch(DRAWING_INPROGRESS_URL, {
+        ...POST,
+        body: JSON.stringify({
+            id: 0,
+            action: 'ADD',
+            timestamp: performance.now(),
+            data: canvasObject.toObject(),
+        })
+    })
+}
+function reportRemove(objectIndex) {
+    fetch(DRAWING_INPROGRESS_URL, {
+        ...POST,
+        body: JSON.stringify({
+            id: 0,
+            action: 'REMOVE',
+            timestamp: performance.now(),
+            data: objectIndex,
+        })
+    })
+}
+function reportClear() {
+    fetch(DRAWING_INPROGRESS_URL, {
+        method: 'post',
+        headers: {
+            'Content-type': 'application/json',
+        },
+        body: JSON.stringify({
+            id: 0,
+            action: 'CLEAR',
+            timestamp: performance.now(),
+            data: objectIndex,
+        })
+    })
+}
 
 // callout banner color anim
 function doBannerAnim(title, letters) {
@@ -61,6 +117,8 @@ document.querySelectorAll('.callout').forEach(callout => {
 const canvas = new fabric.Canvas('canvas', {
     isDrawingMode: true,
 })
+canvas.freeDrawingBrush.decimate = 4 // reduce # of points
+canvas.freeDrawingBrush.limitedToCanvasSize = true
 canvas.wrapperEl.classList.add('wave-border')
 canvas.wrapperEl.style.setProperty('--wave-border-x', 3 + 'px')
 canvas.wrapperEl.style.setProperty('--wave-border-y', 104 + 'px')
@@ -257,7 +315,7 @@ function submitDrawing() {
         obj.top = obj.top - bounds.top
     })
     // post data and dimensions
-    fetch(DRAWING_POST_URL, {
+    fetch(BASE_URL + '/drawing', {
         method: 'post',
         headers: {
             'Content-type': 'application/json',
@@ -294,6 +352,46 @@ doEachAnimationFrame(() => {
         .forEach(b => b.style.display = 'none')
     canvas.wrapperEl.classList.toggle('disable-draw', submitState === SUBMIT_STATE.INPROGRESS)
 })
+
+if (false) {
+    // update in-progress state in server
+    let prevInProgressDrawingLength = 0
+    let prevInProgressStrokeLength = 0
+    function updateInProgress() {
+        const id = 0 // TODO: uuid
+
+        if (prevInProgressDrawingLength !== staticCanvas._objects.length) {
+            prevInProgressDrawingLength = staticCanvas._objects.length
+
+            fetch(BASE_URL + `/inprogress/${id}/drawing`, {
+                method: 'post',
+                headers: {
+                    'Content-type': 'application/json',
+                },
+                body: JSON.stringify(staticCanvas.toObject()),
+            })
+        }
+
+        const brush = canvas.freeDrawingBrush
+        if (prevInProgressStrokeLength !== brush._points.length) {
+            prevInProgressStrokeLength = brush._points.length
+
+            // copied from PencilBrush._finalizeAndAddPath()
+            const points = brush.decimatePoints(brush._points, brush.decimate)
+            const svg = brush.convertPointsToSVGPath(points).join('')
+            const path = brush.createPath(svg);
+
+            fetch(BASE_URL + `/inprogress/${id}/stroke`, {
+                method: 'post',
+                headers: {
+                    'Content-type': 'application/json',
+                },
+                body: JSON.stringify(path.toObject()),
+            })
+        }
+    }
+    setInterval(updateInProgress, 0.6 * 1000)
+}
 
 // utility to replace current drawing with JSON from server
 let DEBUG_loadFromServerCounter = 0
