@@ -22,7 +22,7 @@ function ilerp(x, a, b) {
 }
 
 // config
-const DRAWING_POST_URL = 'https://loves.fool.games/drawing'
+const DRAWING_POST_URL = 'https://localhost:8000/drawing'
 
 // callout banner color anim
 function doBannerAnim(title, letters) {
@@ -143,13 +143,12 @@ let justCleared = false
 canvas.on('object:added', function(e) {
     historyStack.splice(0, historyStack.length)
     justCleared = false
-
     // reset submitted state
     submitState = SUBMIT_STATE.NONE
 
     // add only to static
-    canvas.remove(e.target)
     staticCanvas.add(e.target)
+    canvas.remove(e.target)
 
     // save drawing
     localforage.setItem('DRAW-drawing', JSON.stringify(staticCanvas.toObject()))
@@ -173,6 +172,7 @@ undoButton.onclick = function(e) {
         while (historyStack.length) {
             staticCanvas.add(historyStack.pop())
         }
+        justCleared = false
     } else if (staticCanvas._objects.length) {
         const latestItem = staticCanvas._objects[staticCanvas._objects.length - 1]
         historyStack.push(latestItem)
@@ -184,6 +184,7 @@ redoButton.onclick = function(e) {
         while (historyStack.length) {
             staticCanvas.add(historyStack.pop())
         }
+        justCleared = false
     } else if (historyStack.length) {
         staticCanvas.add(historyStack.pop())
     }
