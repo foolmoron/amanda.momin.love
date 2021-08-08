@@ -30,7 +30,7 @@ window.addEventListener('unhandledrejection', function(e) {
 });
 
 // config
-const DRAWING_POST_URL = 'https://localhost:8000/drawing'
+const DRAWING_POST_URL = 'https://loves.fool.games/drawing'
 
 // callout banner color anim
 function doBannerAnim(title, letters) {
