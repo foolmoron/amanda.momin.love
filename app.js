@@ -42,6 +42,10 @@ for (folder of [IMAGE_FOLDER, JSON_FOLDER]) {
 }
 
 // routes
+app.get('/ping', async (req, res, next) => {
+    res.sendStatus(200)
+})
+
 app.get('/drawing/:id', async (req, res, next) => {
     try {
         const content = await fs.promises.readFile(`${JSON_FOLDER}/${req.params.id}.json`, {encoding: 'utf-8'})
