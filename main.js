@@ -71,6 +71,9 @@ staticCanvas.lowerCanvasEl.style.setProperty('--wave-border-x', 3 + 'px')
 staticCanvas.lowerCanvasEl.style.setProperty('--wave-border-y', 104 + 'px')
 
 function loadFromJSON(json) {
+    if (!json?.objects) {
+        return
+    }
     staticCanvas.renderOnAddRemove = false
     fabric.util.enlivenObjects(json.objects, (objs) => {
         objs.forEach((item) => {
@@ -165,7 +168,7 @@ canvas.on('object:added', function(e) {
 // load drawing after page load
 document.addEventListener('DOMContentLoaded', e => {
     localforage.getItem('DRAW-drawing', function(e, value) {
-        value = value || localStorage.getItem('DRAW-drawing')
+        value = value ?? localStorage.getItem('DRAW-drawing')
         loadFromJSON(JSON.parse(value))
     });
 })
