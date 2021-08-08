@@ -21,6 +21,14 @@ function ilerp(x, a, b) {
     return (x - a) / (b - a)
 }
 
+// catch all errors
+window.onerror = function(...args) {
+    alert(`There was an error! Send a screenshot of this info to Momin or Amanda!\n\n` + JSON.stringify(args))
+}
+window.addEventListener('unhandledrejection', function(e) {
+    alert(`There was an error! Send a screenshot of this info to Momin or Amanda!\n\n` + e.reason)
+});
+
 // config
 const DRAWING_POST_URL = 'https://localhost:8000/drawing'
 
