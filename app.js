@@ -41,11 +41,21 @@ for (folder of [IMAGE_FOLDER, JSON_FOLDER]) {
     }
 }
 
-// routes
+// volatile in-memory DB
+const VOLATILE_DATA = {
+    inProgress: {
+        drawings: {},
+        strokes: {},
+        deleteTimes: {},
+    }
+}
+
+// routes: health
 app.get('/ping', async (req, res, next) => {
     res.sendStatus(200)
 })
 
+// routes: submitted drawings
 app.get('/drawing/:id', async (req, res, next) => {
     try {
         const content = await fs.promises.readFile(`${JSON_FOLDER}/${req.params.id}.json`, {encoding: 'utf-8'})
@@ -75,12 +85,54 @@ app.post('/drawing', async (req, res, next) => {
         var imgStream = fs.createWriteStream(`${IMAGE_FOLDER}/${fileBase}.png`)
         canvas.createPNGStream().on('data', chunk => imgStream.write(chunk))
         await fs.promises.writeFile(`${JSON_FOLDER}/${fileBase}.json`, JSON.stringify(drawing), 'utf-8')
+        // linger image for a while
+        VOLATILE_DATA.inProgress.deleteTimes[req.params.id] = new Date().getTime() + 120 * 1000
         // return
         res.sendStatus(200)
     } catch(e) {
         next(e)
     }
 })
+
+// routes: in-progress drawings
+app.get('/inprogress', async (req, res, next) => {
+    try {
+        res.json(VOLATILE_DATA.inProgress)
+    } catch(e) {
+        next(e)
+    }
+})
+
+app.post('/inprogress/:id/drawing', async (req, res, next) => {
+    VOLATILE_DATA.inProgress.drawings[req.params.id] = req.body
+    VOLATILE_DATA.inProgress.deleteTimes[req.params.id] = new Date().getTime() + 15 * 1000
+    // return
+    res.sendStatus(200)
+})
+
+app.post('/inprogress/:id/stroke', async (req, res, next) => {
+    VOLATILE_DATA.inProgress.strokes[req.params.id] = req.body
+    VOLATILE_DATA.inProgress.deleteTimes[req.params.id] = new Date().getTime() + 15 * 1000
+    // return
+    res.sendStatus(200)
+})
+
+app.delete('/inprogress/:id', async (req, res, next) => {
+    VOLATILE_DATA.inProgress.deleteTimes[req.params.id] = 0
+    // return
+    res.sendStatus(200)
+})
+
+setInterval(() => {
+    const now = new Date().getTime()
+    for (const id in VOLATILE_DATA.inProgress.deleteTimes) {
+        if (VOLATILE_DATA.inProgress.deleteTimes[id] <= now) {
+            delete VOLATILE_DATA.inProgress.drawings[id]
+            delete VOLATILE_DATA.inProgress.strokes[id]
+            delete VOLATILE_DATA.inProgress.deleteTimes[id]
+        }
+    }
+}, 1 * 1000)
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
