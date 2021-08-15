@@ -30,7 +30,7 @@ window.addEventListener('unhandledrejection', function(e) {
 });
 
 // config
-const BASE_URL = 'https://loves.fool.games/drawing'
+const BASE_URL = 'https://loves.fool.games'
 
 // api calls
 const POST = {
