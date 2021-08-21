@@ -118,7 +118,7 @@ const canvas = new fabric.Canvas('canvas', {
     isDrawingMode: true,
 })
 canvas.freeDrawingBrush.decimate = 4 // reduce # of points
-canvas.freeDrawingBrush.limitedToCanvasSize = true
+// canvas.freeDrawingBrush.limitedToCanvasSize = true
 canvas.wrapperEl.classList.add('wave-border')
 canvas.wrapperEl.style.setProperty('--wave-border-x', 3 + 'px')
 canvas.wrapperEl.style.setProperty('--wave-border-y', 104 + 'px')
