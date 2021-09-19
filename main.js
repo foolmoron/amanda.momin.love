@@ -88,6 +88,24 @@ function reportClear() {
     })
 }
 
+async function uploadPhoto(photoFile) {
+    const form = new FormData()
+    form.append('image', photoFile)
+    form.append('album', 'O5ELpmTrlNI41ft')
+    const res = await fetch('https://api.imgur.com/3/image/', {
+            method: 'post',
+            headers: {
+                Authorization: 'Client-ID 04d3c2bf3ea62ac'
+            },
+            body: form,
+        })
+        .then(res => res.json())
+    if (res.status !== 200) {
+        throw new Error(res.data.error)
+    }
+    return res.data
+}
+
 // callout banner color anim
 function doBannerAnim(title, letters) {
     title.borderToggle = !title.borderToggle
@@ -158,6 +176,19 @@ doEachAnimationFrame(() => {
         prevCanvasHeight = canvas.wrapperEl.clientHeight
     }
 })
+
+// uploading
+const buttonContainer = document.querySelector('.button-container')
+const uploadInput = document.querySelector('#upload-input')
+const photoImg = document.querySelector('.photo')
+
+buttonContainer.dataset.state = !!localStorage.getItem('UPLOAD-id') ? 'ready' : 'init'
+
+function onUploadChange(file) {
+    if (file) {
+        startDrawing(file)
+    }
+}
 
 // name
 const nameInput = document.querySelector('input[name="full-name"]')
@@ -296,6 +327,11 @@ const SUBMIT_STATE = {
 }
 let submitState = SUBMIT_STATE.NONE
 function submitDrawing() {
+    if (buttonContainer.dataset.state !== 'ready') {
+        alert('Start a photo/drawing before submitting!')
+        return
+    }
+
     submitState = SUBMIT_STATE.INPROGRESS
     // calculate and cache bounds
     const group = new fabric.Group(staticCanvas.getObjects(), null, true)
@@ -322,12 +358,18 @@ function submitDrawing() {
         },
         body: JSON.stringify({
             name: nameInput.value || '',
+            drawingId: localStorage.getItem('UPLOAD-id'),
             json: data,
             dimensions: { width: Math.ceil(bounds.width), height: Math.ceil(bounds.height) },
         })
     }).then(res => {
         if (res.ok) {
             submitState = SUBMIT_STATE.DONE
+            setTimeout(() => {
+                localStorage.clear()
+                localforage.clear()
+                window.location.reload()
+            }, 600);
         } else {
             throw res.statusText
         }
@@ -353,45 +395,85 @@ doEachAnimationFrame(() => {
     canvas.wrapperEl.classList.toggle('disable-draw', submitState === SUBMIT_STATE.INPROGRESS)
 })
 
-if (false) {
-    // update in-progress state in server
-    let prevInProgressDrawingLength = 0
-    let prevInProgressStrokeLength = 0
-    function updateInProgress() {
-        const id = 0 // TODO: uuid
-
-        if (prevInProgressDrawingLength !== staticCanvas._objects.length) {
-            prevInProgressDrawingLength = staticCanvas._objects.length
-
-            fetch(BASE_URL + `/inprogress/${id}/drawing`, {
-                method: 'post',
-                headers: {
-                    'Content-type': 'application/json',
-                },
-                body: JSON.stringify(staticCanvas.toObject()),
-            })
-        }
-
-        const brush = canvas.freeDrawingBrush
-        if (prevInProgressStrokeLength !== brush._points.length) {
-            prevInProgressStrokeLength = brush._points.length
-
-            // copied from PencilBrush._finalizeAndAddPath()
-            const points = brush.decimatePoints(brush._points, brush.decimate)
-            const svg = brush.convertPointsToSVGPath(points).join('')
-            const path = brush.createPath(svg);
-
-            fetch(BASE_URL + `/inprogress/${id}/stroke`, {
-                method: 'post',
-                headers: {
-                    'Content-type': 'application/json',
-                },
-                body: JSON.stringify(path.toObject()),
-            })
-        }
+function tryStartDrawing(withPhoto) {
+    if (!nameInput.value) {
+        alert('Please enter your name first!')
+        return
     }
-    setInterval(updateInProgress, 0.6 * 1000)
+    if (withPhoto) {
+        uploadInput.click();
+    } else {
+        startDrawing()
+    }
 }
+
+async function startDrawing(file) {
+    buttonContainer.dataset.state = 'uploading'
+    if (file) {
+        try {
+            const photo = await uploadPhoto(file)
+            localStorage.setItem('UPLOAD-id', photo.id)
+            localStorage.setItem('UPLOAD-link', photo.link)
+            staticCanvas.lowerCanvasEl.style.background = `url(${photo.link}) no-repeat center`
+            staticCanvas.lowerCanvasEl.style.backgroundSize = 'contain'
+        } catch (e) {
+            buttonContainer.dataset.state = 'init'
+            uploadInput.value = ''
+            alert(e.message)
+            return
+        }
+    } else {
+        localStorage.setItem('UPLOAD-id', uuidv4())
+    }
+    buttonContainer.dataset.state = 'ready'
+}
+
+// update in-progress state in server
+let prevInProgressDrawingLength = 0
+let prevInProgressStrokeLength = 0
+function updateInProgress() {
+    setTimeout(updateInProgress, 0.6 * 1000)
+
+    const id = localStorage.getItem('UPLOAD-id')
+    if (!id) {
+        return
+    }
+
+    if (prevInProgressDrawingLength !== staticCanvas._objects.length) {
+        prevInProgressDrawingLength = staticCanvas._objects.length
+
+        fetch(BASE_URL + `/inprogress/${id}/drawing`, {
+            method: 'post',
+            headers: {
+                'Content-type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: 'Test',
+                drawingId: id,
+                json: staticCanvas.toObject(),
+            }),
+        })
+    }
+
+    const brush = canvas.freeDrawingBrush
+    if (prevInProgressStrokeLength !== brush._points.length) {
+        prevInProgressStrokeLength = brush._points.length
+
+        // copied from PencilBrush._finalizeAndAddPath()
+        const points = brush.decimatePoints(brush._points, brush.decimate)
+        const svg = brush.convertPointsToSVGPath(points).join('')
+        const path = brush.createPath(svg);
+
+        fetch(BASE_URL + `/inprogress/${id}/stroke`, {
+            method: 'post',
+            headers: {
+                'Content-type': 'application/json',
+            },
+            body: JSON.stringify(path.toObject()),
+        })
+    }
+}
+updateInProgress()
 
 // utility to replace current drawing with JSON from server
 let DEBUG_loadFromServerCounter = 0

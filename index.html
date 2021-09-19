@@ -9,14 +9,20 @@
     <link href="https://fonts.googleapis.com/css?family=Luckiest+Guy" rel="stylesheet">
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/451/fabric.min.js"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.9.0/localforage.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/uuid/8.1.0/uuidv4.min.js"></script>
     <script defer src='main.js?v=7'></script>
 </head>
 <body>
     <div class="overlay" id="draw">
         <a class="overlay-close" href="#"></a>
         <div class="overlay-content">
-
-            <div class="draw-intro wave-border" onclick="location.href = '#'"><div class="draw-x wave-border">X</div>Hello friend! We hacked this otherwise unremarkable wedding website <i>(sorry Zola!)</i>  to bring you this lovingly crafted homemade app for you to draw something cool~<div style="margin: 0.4rem;"></div>We'll use these drawings in a special way during the wedding, so make them fun, absurd, and personal, but not... you know... inappropriate.<div style="position: absolute; bottom: 2px; width: 95%;">♥ Amanda & Momin ♥ <a href="https://github.com/foolmoron/amanda.momin.love" target="_blank" style="float: right;">Source Code (for nerds)</a></a></div></div>
+            <div class="draw-intro wave-border" onclick="location.href = '#'">
+                <div class="draw-x wave-border">X</div>Upload photos of the wedding here for everyone to see on the TV near the DJ
+                table! You can draw on top of the photos too. Thanks for helping us capture this memorable day :D<div
+                    style="position: absolute; bottom: 2px; width: 95%;">♥ Amanda & Momin ♥ <a
+                        href="https://github.com/foolmoron/amanda.momin.love" target="_blank" style="float: right;">Source Code (for
+                        nerds)</a></a></div>
+            </div>
             <div class="draw-panel wave-border">
                 <input class="draw-full-name wave-border" name="full-name" placeholder="Enter Full Name Here" autocorrect="off" autocapitalize="off" spellcheck="false" />
                 <div class="colors">
@@ -47,15 +53,24 @@
                     <div class="img-button wave-border control clear" style="--wave-border-x: 25px; --wave-border-y: 7px;"></div>
                 </div>
                 <div class="canvas-resize-helper">
+                    <div class="button-container" data-state="init">
+                        <input type="file" accept="image/*,.png,.jpg;capture=camera" id="upload-input"
+                            onchange="onUploadChange(this.files[0])" style="display: none;" />
+                        <button class="upload-button wave-border" style="--wave-border-x: 68px; --wave-border-y: 10px;"
+                            onclick="tryStartDrawing(true)">Upload Photo<br>📷</button>
+                        <button class="no-upload-button wave-border" style="--wave-border-x: 10px; --wave-border-y: 46px;"
+                            onclick="tryStartDrawing(false)">Draw Without Photo</button>
+                        <div class="uploading-text">Uploading...</div>
+                    </div>
+                    <img class="photo" crossorigin="anonymous" />
                     <canvas id="static-canvas" class="canvas-container"></canvas>
                     <canvas id="canvas"></canvas>
                 </div>
-                <button class="submit-button submit-none wave-border" onclick="submitDrawing()">Submit Drawing!</button>
+                <button class="submit-button submit-none wave-border" onclick="submitDrawing()">Submit Photo/Drawing!</button>
                 <button class="submit-button submit-inprogress wave-border" style="display: none;">Submitting...</button>
                 <button class="submit-button submit-failed wave-border" onclick="submitDrawing()" style="display: none;">⚠ Submit Failed, Try Again ⚠</button>
-                <button class="submit-button submit-done wave-border" disabled style="display: none;">Successfully Submitted Drawing ✅</button>
-                <label class="submit-message">You can submit as many times as you want, don't worry!</label>
-                <label class="submit-message">(If you run into issues, contact Momin and he can fix it)</label>
+                <button class="submit-button submit-done wave-border" disabled style="display: none;">Successfully Submitted Drawing
+                    ✅</button>
             </div>
         </div>
     </div>
@@ -87,6 +102,12 @@
             <span class="paint-text" style="--color-angle: 51deg; background-position: 8% -77%">!</span>
         </div>
     </a>
+    <div class="overlay" id="view">
+        <a class="overlay-close" href="#"></a>
+        <div class="overlay-content">
+            hi
+        </div>
+    </div>
     <iframe class="fill-container" src="https://www.zola.com/wedding/amandamomin"></iframe>
 </body>
 </html>
