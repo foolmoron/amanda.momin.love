@@ -65,11 +65,41 @@ app.get('/drawing/:id', async (req, res, next) => {
     }
 })
 
+app.get('/drawing', async (req, res, next) => {
+    try {
+        const MAX = 20
+        const limit = Math.min(MAX, parseInt(req.query.limit) || MAX)
+        const files = await fs.promises.readFile(`${JSON_FOLDER}/${req.params.id}.json`, {encoding: 'utf-8'})
+        const descendingDateSortedFiles = files
+            .map(file => ({
+                name: file,
+                time: fs.statSync(`${dir}/${file}`).mtime.getTime(),
+            }))
+            .sort((a, b) => b.time - a.time)
+            .map(file => `${JSON_FOLDER}/${file}`)
+            .slice(0, limit)
+        res.json({
+            images: descendingDateSortedFiles,
+        })
+    } catch(e) {
+        next(e)
+    }
+})
+
+app.get('/image/:file', async (req, res, next) => {
+    try {
+        res.sendFile(`${JSON_FOLDER}/${req.params.file}`)
+    } catch(e) {
+        next(e)
+    }
+})
+
 var canvas = new fabric.StaticCanvas(null, { width: 11, height: 13 }) // 1 canvas for whole app
 app.post('/drawing', async (req, res, next) => {
     const name = sanitizeFilename(req.body.name || '___').replace(/\s/g, '_')
     const drawing = req.body.json
     const dimensions = req.body.dimensions
+    const drawingId = req.body.drawingId || 0
     try {
         // save to png using minimally cropped dimensions provided by client
         canvas.setDimensions({ width: dimensions.width, height: dimensions.height })
@@ -81,14 +111,16 @@ app.post('/drawing', async (req, res, next) => {
             })
         })
         // save image and json
-        const fileBase = `${name}--${new Date().toISOString().replace(/[-:\.]/g, '_').replace(/(.*)T(.*)Z/, '$1--$2')}`
+        const fileBase = `${name}--${new Date().toISOString().replace(/[-:\.]/g, '_').replace(/(.*)T(.*)Z/, '$1--$2')}+++${drawingId}`
         var imgStream = fs.createWriteStream(`${IMAGE_FOLDER}/${fileBase}.png`)
         canvas.createPNGStream().on('data', chunk => imgStream.write(chunk))
         await fs.promises.writeFile(`${JSON_FOLDER}/${fileBase}.json`, JSON.stringify(drawing), 'utf-8')
         // linger image for a while
-        VOLATILE_DATA.inProgress.deleteTimes[req.params.id] = new Date().getTime() + 120 * 1000
+        VOLATILE_DATA.inProgress.deleteTimes[drawingId] = new Date().getTime() + 120 * 1000
         // return
-        res.sendStatus(200)
+        res.json({
+            fileBase
+        })
     } catch(e) {
         next(e)
     }
