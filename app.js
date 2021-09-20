@@ -67,28 +67,24 @@ app.get('/drawing/:id', async (req, res, next) => {
 
 app.get('/drawing', async (req, res, next) => {
     try {
-        const MAX = 20
-        const limit = Math.min(MAX, parseInt(req.query.limit) || MAX)
-        const files = await fs.promises.readFile(`${JSON_FOLDER}/${req.params.id}.json`, {encoding: 'utf-8'})
-        const descendingDateSortedFiles = files
-            .map(file => ({
-                name: file,
-                time: fs.statSync(`${dir}/${file}`).mtime.getTime(),
-            }))
-            .sort((a, b) => b.time - a.time)
-            .map(file => `${JSON_FOLDER}/${file}`)
-            .slice(0, limit)
-        res.json({
-            images: descendingDateSortedFiles,
-        })
-    } catch(e) {
-        next(e)
+      const files = await fs.promises.readdir(IMAGE_FOLDER);
+      const descendingDateSortedFiles = files
+        .map((file) => ({
+          filename: file,
+          time: fs.statSync(`${IMAGE_FOLDER}/${file}`).mtime.getTime(),
+        }))
+        .sort((a, b) => b.time - a.time)
+      res.json({
+        drawings: descendingDateSortedFiles,
+      });
+    } catch (e) {
+      next(e);
     }
 })
 
 app.get('/image/:file', async (req, res, next) => {
     try {
-        res.sendFile(`${JSON_FOLDER}/${req.params.file}`)
+        res.sendFile(req.params.file, { root: IMAGE_FOLDER })
     } catch(e) {
         next(e)
     }
@@ -116,7 +112,7 @@ app.post('/drawing', async (req, res, next) => {
         canvas.createPNGStream().on('data', chunk => imgStream.write(chunk))
         await fs.promises.writeFile(`${JSON_FOLDER}/${fileBase}.json`, JSON.stringify(drawing), 'utf-8')
         // linger image for a while
-        VOLATILE_DATA.inProgress.deleteTimes[drawingId] = new Date().getTime() + 120 * 1000
+        VOLATILE_DATA.inProgress.deleteTimes[drawingId] = new Date().getTime() + 60 * 1000
         // return
         res.json({
             fileBase
