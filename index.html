@@ -6,7 +6,10 @@
     <title>Amanda 💖 Momin</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' type='text/css' media='screen' href='main.css?v=7'>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css?family=Luckiest+Guy" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/451/fabric.min.js"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.9.0/localforage.min.js"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/uuid/8.1.0/uuidv4.min.js"></script>
@@ -16,13 +19,7 @@
     <div class="overlay" id="draw">
         <a class="overlay-close" href="#"></a>
         <div class="overlay-content">
-            <div class="draw-intro wave-border" onclick="location.href = '#'">
-                <div class="draw-x wave-border">X</div>Upload photos of the wedding here for everyone to see on the TV near the DJ
-                table! You can draw on top of the photos too. Thanks for helping us capture this memorable day :D<div
-                    style="position: absolute; bottom: 2px; width: 95%;">♥ Amanda & Momin ♥ <a
-                        href="https://github.com/foolmoron/amanda.momin.love" target="_blank" style="float: right;">Source Code (for
-                        nerds)</a></a></div>
-            </div>
+            <div class="draw-intro wave-border" onclick="location.href = '#'"><div class="draw-x wave-border">X</div>Upload photos of the wedding here for everyone to see on the TV near the DJ table! You can draw on top of the photos too. Thanks for helping us capture this memorable day :D<div style="position: absolute; bottom: 2px; width: 95%;">♥ Amanda & Momin ♥ <a href="https://github.com/foolmoron/amanda.momin.love" target="_blank" style="float: right;">Source Code (fornerds)</a></a></div></div>
             <div class="draw-panel wave-border">
                 <input class="draw-full-name wave-border" name="full-name" placeholder="Enter Full Name Here" autocorrect="off" autocapitalize="off" spellcheck="false" />
                 <div class="colors">
@@ -69,8 +66,7 @@
                 <button class="submit-button submit-none wave-border" onclick="submitDrawing()">Submit Photo/Drawing!</button>
                 <button class="submit-button submit-inprogress wave-border" style="display: none;">Submitting...</button>
                 <button class="submit-button submit-failed wave-border" onclick="submitDrawing()" style="display: none;">⚠ Submit Failed, Try Again ⚠</button>
-                <button class="submit-button submit-done wave-border" disabled style="display: none;">Successfully Submitted Drawing
-                    ✅</button>
+                <button class="submit-button submit-done wave-border" disabled style="display: none;">Successfully Submitted Drawing ✅</button>
             </div>
         </div>
     </div>
@@ -103,11 +99,17 @@
         </div>
     </a>
     <div class="overlay" id="view">
-        <a class="overlay-close" href="#"></a>
-        <div class="overlay-content">
-            hi
+        <div class="view-container">
+            <header>Go to <span>amanda.momin.love</span> on your phone to upload photos & drawings to the gallery!</header>
         </div>
     </div>
     <iframe class="fill-container" src="https://www.zola.com/wedding/amandamomin"></iframe>
+
+    <template id="tpl-gallery-image">
+        <div class="gallery-image">
+            <img class="drawing" crossorigin="anonymous" src="" />
+            <label>Someone's long name here</label>
+        </div>
+    </template>
 </body>
 </html>

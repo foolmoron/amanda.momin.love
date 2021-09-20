@@ -145,6 +145,7 @@ body {
     background: var(--callout-color);
     color: var(--semi-black);
     -webkit-text-stroke: 0;
+    white-space: pre-wrap;
 }
 .draw-x {
     position: absolute;
@@ -361,4 +362,93 @@ body {
 
 .button-container[data-state="ready"] {
     display: none;
+}
+
+.view-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: hsl(53deg 42% 96%);
+    width: 100vw;
+    height: 100vh;
+    font-family: 'Dancing Script', cursive;
+}
+
+.view-container h1 {
+    font-weight: bold;
+    font-size: 4rem;
+    margin: 1rem;
+}
+
+.view-container header {
+    width: 100%;
+    padding: 0.7rem;
+    background: white;
+    text-align: center;
+    font-weight: normal;
+    font-family: 'Luckiest Guy';
+    color: white;
+    --font-size: calc(2rem);
+    font-size: var(--font-size);
+    -webkit-text-stroke: calc(var(--font-size)*0.05) black;
+}
+
+.view-container header span {
+    color: rgb(241,125,255);
+}
+
+.gallery-image {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: hsl(222deg 3% 94%);
+    padding: 1rem;
+    padding-bottom: 0.2rem;
+    box-shadow: 0 0.2rem 1.2rem hsl(219deg 16% 27% / 30%);
+    border-radius: 4px;
+
+    --r: 0turn;
+    --x: 0vw;
+    --y: 0vh;
+    --s: 0;
+    opacity: 0;
+    transform: translateX(var(--x)) translateY(var(--y)) scale(0) rotateZ(-1turn);
+}
+
+.gallery-image.pop-in {
+    opacity: 1;
+    transform: translateX(var(--x)) translateY(var(--y)) scale(1.2) rotateZ(var(--r));
+    transition: 1.6s transform cubic-bezier(0.4, 0.46, 0.27, 1.49), 0.3s opacity ease, 0.4s opacity ease;
+}
+.gallery-image.pop-out {
+    opacity: 0;
+    transition: 2.2s transform cubic-bezier(0.29,-0.41, 0.69, 0.88), 4.8s opacity ease;
+    transform: translateX(var(--x)) translateY(150vh) scale(0.66) rotateZ(0);
+}
+
+.gallery-image.scrolling {
+    --t: 60s;
+    --x: -50vw;
+    opacity: 1;
+    box-shadow: 0 0.1rem 0.1rem hsl(219deg 16% 27% / 30%);
+    transform: translateX(var(--x)) translateY(var(--y)) scale(1) rotateZ(0);
+}
+.gallery-image.scrolling.animate {
+    --x: 50vw;
+    transition: var(--t) transform linear;
+}
+
+.gallery-image .drawing {
+    background: white;
+}
+
+.gallery-image label {
+    font-size: 1.8rem;
+    padding: 10px 6px;
+    max-width: 260px;
+    max-height: 62px;
+    text-align: center;
+    width: max-content;
+    overflow: hidden;
 }
