@@ -589,7 +589,7 @@ async function popupImage(drawingKey) {
   newImage.style.setProperty("--y", ((Math.random()) * 37 + 12) + 'vh');
   await new Promise((resolve) => setTimeout(resolve, 100))
   newImage.classList.add('pop-in')
-  await new Promise((resolve) => setTimeout(resolve, 2 * 1000))
+  await new Promise((resolve) => setTimeout(resolve, 90 * 1000))
   newImage.classList.remove('pop-in')
   newImage.classList.add('pop-out')
   await new Promise((resolve) => setTimeout(resolve, 5 * 1000))
