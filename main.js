@@ -539,13 +539,15 @@ async function initDrawing(drawingKey) {
       throw e
     }
   }
-  const aspectRatio = image.width / image.height
+  const w = image.width || image.naturalWidth
+  const h = image.height || image.naturalHeight
+  const aspectRatio = w / h
   if (aspectRatio > 1) {
-    image.style.width = Math.min(500, image.width) + 'px'
-    image.style.height = Math.min(500, image.width / aspectRatio) + 'px'
+    image.style.width = Math.min(500, w) + 'px'
+    image.style.height = Math.min(500, w / aspectRatio) + 'px'
   } else {
-    image.style.width = Math.min(500, image.height * aspectRatio) + 'px'
-    image.style.height = Math.min(500, image.height) + 'px'
+    image.style.width = Math.min(500, h * aspectRatio) + 'px'
+    image.style.height = Math.min(500, h) + 'px'
   }
 
   newImage.querySelector('label').textContent = drawingKey.split('--')[0].replace(/_/g, ' ')
@@ -653,7 +655,7 @@ function updateView() {
   // spawn gallery items
   tNewItem -= dt
   if (tNewItem <= 0) {
-    tNewItem = Math.random() * 2 + 3
+    tNewItem = Math.random() * 3 + 4
     void newImageScroll()
   }
 
