@@ -98,15 +98,7 @@ function doBannerAnim(title, letters) {
 document.querySelectorAll(".callout").forEach((callout) => {
   const title = callout.querySelector(".title");
   const letters = callout.querySelectorAll(".title span");
-  let intervalId = 0;
-  callout.addEventListener("mouseenter", (e) => {
-    intervalId = setInterval(() => doBannerAnim(title, letters), 450);
-    doBannerAnim(title, letters);
-  });
-  callout.addEventListener("mouseleave", (e) => {
-    clearInterval(intervalId);
-    letters.forEach((letter) => (letter.style.transform = ``));
-  });
+  let intervalId = setInterval(() => doBannerAnim(title, letters), 450);
 });
 
 // hash
