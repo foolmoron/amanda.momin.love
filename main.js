@@ -523,7 +523,12 @@ async function initDrawing(drawingKey) {
   }
 
   // wait for image dimensions and apply aspect ratio
-  await loaded
+  try {
+    await loaded
+  } catch {
+    newImage.remove()
+    return
+  }
   const aspectRatio = image.width / image.height
   if (aspectRatio > 1) {
     image.style.width = Math.min(500, image.width) + 'px'
