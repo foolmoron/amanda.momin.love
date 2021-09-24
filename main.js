@@ -353,6 +353,14 @@ async function submitDrawing() {
     obj.left = obj.left - bounds.left;
     obj.top = obj.top - bounds.top;
   });
+  if (data.objects.length == 0) {
+    const name = nameInput.value.toString()
+    localStorage.clear();
+    localStorage.setItem("DRAW-name", name)
+    localforage.clear();
+    window.location.reload();
+    return
+  }
   // post data and dimensions
   return fetch(BASE_URL + "/drawing", {
     method: "post",
