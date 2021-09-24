@@ -537,6 +537,8 @@ async function initDrawing(drawingKey) {
     if (image.src.indexOf('imgur') < 0) {
       newImage.remove()
       throw e
+    } else {
+      await new Promise(resolve => setTimeout(resolve, 2000))
     }
   }
   const w = image.width || image.naturalWidth
