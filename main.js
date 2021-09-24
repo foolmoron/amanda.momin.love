@@ -557,7 +557,7 @@ const newlyAdded = {}
 
 async function loopView() {
   if (HASH !== "view") {
-    setTimeout(loopView, 1 * 1000)
+    setTimeout(loopView, 2 * 1000)
     return
   }
   await initView()
@@ -586,7 +586,7 @@ async function loopView() {
       console.warn(e)
     })
   }
-  setTimeout(loopView, 1 * 1000)
+  setTimeout(loopView, 2 * 1000)
 }
 void loopView()
 
@@ -651,7 +651,7 @@ function updateView() {
   // spawn gallery items
   tNewItem -= dt
   if (tNewItem <= 0) {
-    tNewItem = Math.random() * 3 + 6
+    tNewItem = Math.random() * 2 + 3
     void newImageScroll()
   }
 
