@@ -547,7 +547,7 @@ async function initDrawing(drawingKey) {
   if (aspectRatio > 1) {
     const ww = Math.min(400, w)
     image.style.width = ww + 'px'
-    image.style.height = Math.min(400, www / aspectRatio) + 'px'
+    image.style.height = Math.min(400, ww / aspectRatio) + 'px'
   } else {
     const hh = Math.min(400, h)
     image.style.width = Math.min(400, hh * aspectRatio) + 'px'
