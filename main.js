@@ -373,7 +373,9 @@ async function submitDrawing() {
       if (res.ok) {
         submitState = SUBMIT_STATE.DONE;
         alert((id.length > 10 ? 'Drawing' : 'Photo') + ' uploaded! Check it out on the TV near the DJ booth!')
+        const name = nameInput.value.toString()
         localStorage.clear();
+        localStorage.setItem("DRAW-name", name)
         localforage.clear();
         window.location.reload();
       } else {
