@@ -524,8 +524,7 @@ async function initDrawing(drawingKey) {
     image.addEventListener('load', resolve)
     image.addEventListener('error', reject);
   })
-  const notimgur = d.length > 10 || id.length <= 3
-  if (d.length > 10 || id.length <= 3) {
+  if (id.length > 10 || id.length <= 3) {
     image.src = `${BASE_URL}/image/${drawingKey}`
   } else {
     image.src = (await getPhoto(id)).link
