@@ -536,20 +536,22 @@ async function initDrawing(drawingKey) {
   } catch(e) {
     if (image.src.indexOf('imgur') < 0) {
       newImage.remove()
-      throw e
+      return
     } else {
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      await new Promise(resolve => setTimeout(resolve, 1000))
     }
   }
   const w = image.width || image.naturalWidth
   const h = image.height || image.naturalHeight
   const aspectRatio = w / h
   if (aspectRatio > 1) {
-    image.style.width = Math.min(500, w) + 'px'
-    image.style.height = Math.min(500, w / aspectRatio) + 'px'
+    const ww = Math.min(400, w)
+    image.style.width = ww + 'px'
+    image.style.height = Math.min(400, www / aspectRatio) + 'px'
   } else {
-    image.style.width = Math.min(500, h * aspectRatio) + 'px'
-    image.style.height = Math.min(500, h) + 'px'
+    const hh = Math.min(400, h)
+    image.style.width = Math.min(400, hh * aspectRatio) + 'px'
+    image.style.height = hh + 'px'
   }
 
   newImage.querySelector('label').textContent = drawingKey.split('--')[0].replace(/_/g, ' ')
