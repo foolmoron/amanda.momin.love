@@ -424,6 +424,7 @@ async function startDrawing(file) {
       const photo = await uploadPhoto(file);
       localStorage.setItem("UPLOAD-id", photo.id);
       localStorage.setItem("UPLOAD-link", photo.link);
+      buttonContainer.dataset.state = "ready";
       await submitDrawing()
       return
     } catch (e) {
