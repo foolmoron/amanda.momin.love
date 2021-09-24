@@ -30,7 +30,7 @@ window.addEventListener('unhandledrejection', function(e) {
 });
 
 // config
-const BASE_URL = "http://localhost:8000";
+const BASE_URL = "https://loves.fool.games";
 const IMGUR_CLIENT_ID = "04d3c2bf3ea62ac";
 
 // api calls
