@@ -525,9 +525,9 @@ async function initDrawing(drawingKey) {
   // wait for image dimensions and apply aspect ratio
   try {
     await loaded
-  } catch {
+  } catch(e) {
     newImage.remove()
-    return
+    throw e
   }
   const aspectRatio = image.width / image.height
   if (aspectRatio > 1) {
@@ -549,7 +549,7 @@ const newlyAdded = {}
 
 async function loopView() {
   if (HASH !== "view") {
-    setTimeout(loopView, 2 * 1000)
+    setTimeout(loopView, 1 * 1000)
     return
   }
   await initView()
@@ -574,9 +574,11 @@ async function loopView() {
         id: draw.filename.split('.')[0].split('+++')[1],
         link: link,
       }
+    }).catch(e => {
+      console.warn(e)
     })
   }
-  setTimeout(loopView, 2 * 1000)
+  setTimeout(loopView, 1 * 1000)
 }
 void loopView()
 
