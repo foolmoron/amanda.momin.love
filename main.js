@@ -524,7 +524,8 @@ async function initDrawing(drawingKey) {
     image.addEventListener('load', resolve)
     image.addEventListener('error', reject);
   })
-  if (id.length > 10 || id.length <= 3) {
+  const notimgur = d.length > 10 || id.length <= 3
+  if (d.length > 10 || id.length <= 3) {
     image.src = `${BASE_URL}/image/${drawingKey}`
   } else {
     image.src = (await getPhoto(id)).link
@@ -534,8 +535,10 @@ async function initDrawing(drawingKey) {
   try {
     await loaded
   } catch(e) {
-    newImage.remove()
-    throw e
+    if (image.src.indexOf('imgur') < 0) {
+      newImage.remove()
+      throw e
+    }
   }
   const aspectRatio = image.width / image.height
   if (aspectRatio > 1) {
