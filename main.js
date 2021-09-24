@@ -353,7 +353,7 @@ async function submitDrawing() {
     obj.left = obj.left - bounds.left;
     obj.top = obj.top - bounds.top;
   });
-  if (data.objects.length == 0) {
+  if (data.objects.length == 0 && !localStorage.getItem("UPLOAD-link")) {
     const name = nameInput.value.toString()
     localStorage.clear();
     localStorage.setItem("DRAW-name", name)
