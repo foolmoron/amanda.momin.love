@@ -495,7 +495,7 @@ async function initView() {
     filename: d.filename,
     time: d.time,
     name: d.filename.split('--')[0].replace(/_/g, ' '),
-    id: d.filename.split('.')[0].split('+++')[1],
+    id: /(.*)\./.exec(d.filename)[1].split('+++')[1],
     link: im.querySelector('img').src,
   }))))
   for (const r of records) {
@@ -513,7 +513,7 @@ async function initDrawing(drawingKey) {
 
   const newImage = templateGalleryImage.content.firstElementChild.cloneNode(true)
   viewContainer.appendChild(newImage)
-  const id = drawingKey.split('.')[0].split('+++')[1]
+  const id = /(.*)\./.exec(drawingKey)[1].split('+++')[1]
   newImage.dataset.key = drawingKey
   newImage.dataset.id = id
 
@@ -587,7 +587,7 @@ async function loopView() {
         filename: draw.filename,
         time: draw.time,
         name: draw.filename.split('--')[0].replace(/_/g, ' '),
-        id: draw.filename.split('.')[0].split('+++')[1],
+        id: /(.*)\./.exec(draw.filename)[1].split('+++')[1],
         link: link,
       }
     }).catch(e => {
